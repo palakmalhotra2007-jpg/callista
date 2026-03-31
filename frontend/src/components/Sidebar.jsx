@@ -32,7 +32,7 @@ export default function Sidebar({ page, setPage, search, setSearch, category, se
       <div className="sb-brand">
         <div className="sb-brand-mark"><Phone size={17} strokeWidth={2.5} /></div>
         <div style={{ minWidth: 0 }}>
-          <div className="sb-brand-name">Dial</div>
+          <div className="sb-brand-name">Callista</div>
           <div className="sb-brand-user">@{user?.username}</div>
         </div>
       </div>
