@@ -80,14 +80,18 @@
   padding: 10px;
 }
 
-/* ===== FIX BUTTONS ON MOBILE ===== */
+/* Fix bottom buttons on mobile */
 @media (max-width: 768px) {
   .sb-tools {
+    display: flex;
     flex-direction: column;
+    gap: 8px;
   }
 
   .sb-footer {
+    display: flex;
     flex-direction: column;
+    gap: 8px;
   }
 
   .sb-tool,
@@ -95,22 +99,27 @@
     width: 100%;
     justify-content: center;
   }
+
+  .sb-bottom {
+    padding-bottom: 20px;
+  }
 }
 
 /* ===== MAIN CONTENT RESPONSIVE ===== */
-.main-content {
+.main {
   margin-left: 248px;
   padding: 20px;
+  transition: margin-left 0.3s ease;
 }
 
 @media (max-width: 1024px) {
-  .main-content {
+  .main {
     margin-left: 200px;
   }
 }
 
 @media (max-width: 768px) {
-  .main-content {
+  .main {
     margin-left: 0;
     padding: 70px 15px 15px;
   }

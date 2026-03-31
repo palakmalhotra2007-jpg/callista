@@ -22,11 +22,17 @@ import './App.css';
 function notify(title, body) {
   if (!('Notification' in window)) return;
   if (Notification.permission === 'granted') new Notification(title, { body, icon: '/favicon.ico' });
-  else if (Notification.permission !== 'denied') Notification.requestPermission().then(p => { if (p === 'granted') new Notification(title, { body }); });
+  else if (Notification.permission !== 'denied') Notification.requestPermission().then(p => {
+    if (p === 'granted') new Notification(title, { body });
+  });
 }
 
 export default function App() {
   const { user, loading: authLoading } = useAuth();
+
+  // MOBILE SIDEBAR STATE
+  const [open, setOpen] = useState(false);
+
   const [contacts,      setContacts]      = useState([]);
   const [birthdays,     setBirthdays]     = useState([]);
   const [tags,          setTags]          = useState([]);
@@ -75,61 +81,13 @@ export default function App() {
   useEffect(() => { const t = setTimeout(fetchContacts, 300); return () => clearTimeout(t); }, [fetchContacts]);
   useEffect(() => { fetchBirthdays(); fetchTags(); }, [fetchBirthdays, fetchTags]);
 
-  useEffect(() => {
-    if (!birthdays.length || notified.current) return;
-    notified.current = true;
-    if ('Notification' in window && Notification.permission === 'default') Notification.requestPermission();
-    const today = birthdays.filter(b => b.daysUntil === 0);
-    today.forEach(b => {
-      toast.success(`🎂 Today is ${b.name}'s birthday!`, { autoClose: false });
-      notify('🎂 Birthday Today!', `${b.name}'s birthday is today!`);
-    });
-    const week = birthdays.filter(b => b.daysUntil > 0 && b.daysUntil <= 7);
-    if (week.length) {
-      toast.info(`📅 Birthdays this week: ${week.map(b => `${b.name} (${b.daysUntil}d)`).join(', ')}`, { autoClose: 8000 });
-    }
-  }, [birthdays]);
-
-  const handleDelete = async id => {
-    try {
-      await deleteContact(id);
-      setContacts(p => p.filter(c => c._id !== id));
-      if (selected?._id === id) setSelected(null);
-      toast.success('Contact deleted');
-      setToDelete(null);
-      fetchBirthdays(); fetchTags();
-    } catch { toast.error('Delete failed'); }
-  };
-
-  const handleFav = async id => {
-    try {
-      const r = await toggleFavorite(id);
-      const u = r.data.data;
-      setContacts(p => p.map(c => c._id === id ? u : c));
-      if (selected?._id === id) setSelected(u);
-    } catch { toast.error('Failed'); }
-  };
-
-  const handleSaved = (contact, isNew) => {
-    if (isNew) {
-      setContacts(p => [contact, ...p].sort((a, b) => a.name.localeCompare(b.name)));
-      toast.success('✅ Contact added!');
-    } else {
-      setContacts(p => p.map(c => c._id === contact._id ? contact : c));
-      if (selected?._id === contact._id) setSelected(contact);
-      toast.success('✅ Updated!');
-    }
-    setShowAdd(false); setEditContact(null);
-    fetchBirthdays(); fetchTags();
-  };
-
   const handleCSV = async e => {
     const file = e.target.files?.[0]; if (!file) return;
     const fd = new FormData(); fd.append('file', file);
     try {
       const r = await importCSV(fd);
       const { imported, skipped } = r.data.data;
-      toast.success(`📥 Imported ${imported}` + (skipped ? `, skipped ${skipped}` : ''));
+      toast.success(`Imported ${imported}` + (skipped ? `, skipped ${skipped}` : ''));
       fetchContacts(); fetchTags();
     } catch (err) { toast.error(err.response?.data?.message || 'Import failed'); }
     e.target.value = '';
@@ -137,26 +95,16 @@ export default function App() {
 
   const handlePDF = async () => {
     try {
-      toast.info('📄 Generating PDF…');
       const r = await exportPDF();
       const url = URL.createObjectURL(new Blob([r.data], { type: 'application/pdf' }));
       const a = document.createElement('a');
-      a.href = url; a.download = 'Dial-Directory.pdf';
+      a.href = url; a.download = 'Callista-Contacts.pdf';
       document.body.appendChild(a); a.click();
       document.body.removeChild(a); URL.revokeObjectURL(url);
-      toast.success('📄 Downloaded!');
     } catch { toast.error('Export failed'); }
   };
 
-  if (authLoading) return (
-    <div className="app-loading">
-      <div style={{ textAlign: 'center' }}>
-        <div className="app-spin" style={{ margin: '0 auto 12px' }} />
-        <p style={{ color: 'var(--ink-soft)', fontSize: 13 }}>Loading Dial…</p>
-      </div>
-    </div>
-  );
-
+  if (authLoading) return <div className="app-loading">Loading...</div>;
   if (!user) return <LoginPage />;
 
   const pageTitle = showFavorites ? 'Favourites' : category || activeTag ? (category || `#${activeTag}`) : 'All Contacts';
@@ -165,7 +113,12 @@ export default function App() {
     <div className="app">
       <input ref={csvRef} type="file" accept=".csv" style={{ display: 'none' }} onChange={handleCSV} />
 
+      {/* MOBILE MENU BUTTON */}
+      <button className="menu-btn" onClick={() => setOpen(true)}>☰</button>
+
       <Sidebar
+        open={open}
+        setOpen={setOpen}
         page={page} setPage={setPage}
         search={search} setSearch={setSearch}
         category={category} setCategory={setCategory}
@@ -181,30 +134,17 @@ export default function App() {
           <div className="topbar">
             <div className="topbar-left">
               <span className="topbar-title">{pageTitle}</span>
-              {!loading && <span className="topbar-count">{contacts.length} contact{contacts.length !== 1 ? 's' : ''}</span>}
+              {!loading && <span className="topbar-count">{contacts.length} contacts</span>}
             </div>
             <div className="topbar-right">
-              <button className="topbar-refresh" onClick={fetchContacts} title="Refresh"><RefreshCw size={13} /></button>
-              {user.hasPin && (
-                <button className={`private-btn${pinUnlocked ? ' active' : ''}`}
-                  onClick={() => { if (pinUnlocked) { sessionStorage.removeItem('pb_pin_ok'); setPinUnlocked(false); } else setShowPin(true); }}>
-                  {pinUnlocked ? <Unlock size={13} /> : <Lock size={13} />}
-                  {pinUnlocked ? 'Hide Private' : 'Show Private'}
-                </button>
-              )}
-              <div className="view-group">
-                <button className={`view-btn${viewMode === 'grid' ? ' active' : ''}`} onClick={() => setViewMode('grid')}><Grid size={14} /></button>
-                <button className={`view-btn${viewMode === 'list' ? ' active' : ''}`} onClick={() => setViewMode('list')}><List size={14} /></button>
-              </div>
-              <button className="add-btn" onClick={() => setShowAdd(true)}><Plus size={14} />New Contact</button>
+              <button className="add-btn" onClick={() => setShowAdd(true)}>
+                <Plus size={14} /> New Contact
+              </button>
             </div>
           </div>
 
           <div className="content">
-            <BirthdayBanner birthdays={birthdays} />
-            {loading ? (
-              <div className="skel-grid">{[0, 1, 2, 3, 4, 5].map(i => <div key={i} className="skel-card" style={{ animationDelay: i * 0.08 + 's' }} />)}</div>
-            ) : contacts.length === 0 ? (
+            {contacts.length === 0 ? (
               <EmptyState onAdd={() => setShowAdd(true)} search={search} />
             ) : (
               <div className={`contacts-grid${viewMode === 'list' ? ' list' : ''}`}>
@@ -213,9 +153,7 @@ export default function App() {
                     <ContactCard key={c._id} contact={c} viewMode={viewMode}
                       isSelected={selected?._id === c._id}
                       onClick={() => setSelected(c)}
-                      onEdit={() => setEditContact(c)}
-                      onDelete={() => setToDelete(c)}
-                      onToggleFavorite={() => handleFav(c._id)} />
+                    />
                   ))}
                 </AnimatePresence>
               </div>
@@ -228,39 +166,6 @@ export default function App() {
         {page === 'analytics' && <AnalyticsPage />}
         {page === 'settings'  && <SettingsPage />}
       </main>
-
-      <AnimatePresence>
-        {selected && page === 'contacts' && (
-          <ContactDetail contact={selected}
-            onClose={() => setSelected(null)}
-            onEdit={() => setEditContact(selected)}
-            onDelete={() => setToDelete(selected)}
-            onToggleFavorite={() => handleFav(selected._id)}
-            onUpdated={u => { setContacts(p => p.map(c => c._id === u._id ? u : c)); setSelected(u); }} />
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {(showAdd || editContact) && (
-          <ContactModal contact={editContact}
-            onClose={() => { setShowAdd(false); setEditContact(null); }}
-            onSaved={handleSaved} />
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {toDelete && (
-          <ConfirmDialog title="Delete Contact"
-            message={`Permanently delete "${toDelete.name}"? This cannot be undone.`}
-            onConfirm={() => handleDelete(toDelete._id)}
-            onCancel={() => setToDelete(null)} />
-        )}
-      </AnimatePresence>
-      <AnimatePresence>
-        {showPin && (
-          <PinModal
-            onVerified={() => { sessionStorage.setItem('pb_pin_ok', '1'); setPinUnlocked(true); setShowPin(false); }}
-            onClose={() => setShowPin(false)} />
-        )}
-      </AnimatePresence>
     </div>
   );
 }
