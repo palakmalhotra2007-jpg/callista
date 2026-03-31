@@ -1,21 +1,24 @@
 .app { display: flex; min-height: 100vh; }
 .main { flex: 1; margin-left: 248px; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
 .main.panel-open { margin-right: 360px; }
-.main-content {
+.main {
   margin-left: 248px;
-  padding: 20px;
+  min-height: 100vh;
+  transition: margin-left 0.3s ease;
 }
 
+/* Tablet */
 @media (max-width: 1024px) {
-  .main-content {
+  .main {
     margin-left: 200px;
   }
 }
 
+/* Mobile */
 @media (max-width: 768px) {
-  .main-content {
+  .main {
     margin-left: 0;
-    padding: 12px;
+    padding-top: 60px;
   }
 }
 /* Topbar */
