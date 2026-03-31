@@ -1,0 +1,232 @@
+/* ─────────────────────────────────────────────
+   🌸 CALLISTA LOGIN PAGE
+   Clean • Centered • App-like
+───────────────────────────────────────────── */
+
+/* ── PAGE LAYOUT ─────────────────────────── */
+.lp-center {
+  min-height: 100vh;
+  display: grid;
+  place-items: center;
+  background: #f4f6fb;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Soft background glow */
+.lp-center::before {
+  content: "";
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  background: radial-gradient(circle, rgba(124,131,253,0.25), transparent 70%);
+  top: -120px;
+  right: -120px;
+  filter: blur(60px);
+}
+
+.lp-center::after {
+  content: "";
+  position: absolute;
+  width: 350px;
+  height: 350px;
+  background: radial-gradient(circle, rgba(99,102,241,0.18), transparent 70%);
+  bottom: -120px;
+  left: -120px;
+  filter: blur(80px);
+}
+
+/* ── CARD ─────────────────────────── */
+.lp-card {
+  width: 100%;
+  max-width: 420px;
+  background: white;
+  border-radius: 20px;
+  padding: 34px 30px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.08);
+  position: relative;
+  z-index: 2;
+}
+
+/* ── BRANDING ─────────────────────────── */
+.lp-card-brand {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 26px;
+}
+
+.lp-card-mark {
+  width: 32px;
+  height: 32px;
+  background: var(--brand);
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.lp-card-name {
+  font-size: 1.1rem;
+  font-weight: 800;
+  color: var(--ink);
+}
+
+.brand-tagline {
+  font-size: 12px;
+  color: #7c83fd;
+  margin-top: 3px;
+}
+
+/* ── TITLE SECTION ─────────────────────────── */
+.lp-title {
+  font-size: 1.25rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin-bottom: 4px;
+}
+
+.lp-sub {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin-bottom: 22px;
+}
+
+/* ── ERROR BOX ─────────────────────────── */
+.lp-err {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: var(--red-bg);
+  border: 1px solid #fca5a5;
+  border-radius: var(--r-md);
+  padding: 10px 12px;
+  font-size: 13px;
+  color: var(--red);
+  margin-bottom: 16px;
+}
+
+/* ── FORM ─────────────────────────── */
+.lp-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.lp-field label {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  color: var(--ink-mid);
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+  margin-bottom: 6px;
+}
+
+.lp-iw {
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.lp-ico {
+  position: absolute;
+  left: 12px;
+  color: var(--ink-ghost);
+  pointer-events: none;
+  display: flex;
+}
+
+.lp-iw input {
+  width: 100%;
+  height: 44px;
+  padding: 0 40px 0 38px;
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  color: var(--ink);
+  font-size: 14px;
+  outline: none;
+  transition: all 0.15s;
+}
+
+.lp-iw input::placeholder {
+  color: var(--ink-ghost);
+}
+
+.lp-iw input:focus {
+  border-color: var(--brand);
+  background: var(--surface);
+  box-shadow: 0 0 0 3px var(--brand-glow);
+}
+
+.lp-eye {
+  position: absolute;
+  right: 10px;
+  background: none;
+  border: none;
+  color: var(--ink-ghost);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  padding: 4px;
+}
+
+.lp-eye:hover {
+  color: var(--ink-soft);
+}
+
+/* ── BUTTON ─────────────────────────── */
+.lp-btn {
+  width: 100%;
+  height: 46px;
+  background: var(--brand);
+  color: white;
+  border: none;
+  border-radius: var(--r-md);
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 4px;
+  transition: background 0.15s, transform 0.1s;
+  box-shadow: var(--sh-brand);
+}
+
+.lp-btn:hover:not(:disabled) {
+  background: var(--brand-dark);
+}
+
+.lp-btn:active:not(:disabled) {
+  transform: scale(0.99);
+}
+
+.lp-btn:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* ── SWITCH LINK ─────────────────────────── */
+.lp-switch {
+  margin-top: 18px;
+  text-align: center;
+  font-size: 13px;
+  color: var(--ink-soft);
+}
+
+.lp-switch button {
+  background: none;
+  border: none;
+  color: var(--brand);
+  cursor: pointer;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.lp-switch button:hover {
+  text-decoration: underline;
+}

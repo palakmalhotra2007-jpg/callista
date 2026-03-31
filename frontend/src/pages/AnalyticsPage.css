@@ -1,0 +1,14 @@
+.ap { padding: 28px; }
+.ap-title { font-size: 1.45rem; font-weight: 800; color: var(--ink); margin-bottom: 24px; }
+.ap-loading { display: flex; align-items: center; justify-content: center; height: 300px; }
+.ap-spinner { width: 30px; height: 30px; border: 3px solid var(--border); border-top-color: var(--brand); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.ap-stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(140px, 1fr)); gap: 12px; margin-bottom: 28px; }
+.ap-stat { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 18px 16px; text-align: center; }
+.ap-stat-icon { width: 38px; height: 38px; border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; margin: 0 auto 10px; }
+.ap-stat-val  { font-size: 1.7rem; font-weight: 800; color: var(--ink); margin-bottom: 3px; }
+.ap-stat-lbl  { font-size: 11px; color: var(--ink-soft); font-weight: 600; }
+.ap-charts { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.ap-chart { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 20px; }
+.ap-chart h3 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 16px; display: flex; align-items: center; gap: 7px; }
+.ap-no-data { font-size: 13px; color: var(--ink-ghost); text-align: center; padding: 40px 0; }
+@media (max-width: 768px) { .ap-charts { grid-template-columns: 1fr; } }

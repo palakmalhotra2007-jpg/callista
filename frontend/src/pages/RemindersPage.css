@@ -1,0 +1,26 @@
+.rp { padding: 28px; }
+.rp-header { display: flex; align-items: center; gap: 12px; margin-bottom: 24px; }
+.rp-header h2 { font-size: 1.45rem; font-weight: 800; color: var(--ink); }
+.rp-count { font-size: 12px; font-weight: 700; background: var(--red-bg); color: var(--red); border: 1px solid #fca5a5; padding: 3px 11px; border-radius: 20px; }
+.rp-loading { display: flex; align-items: center; justify-content: center; height: 300px; }
+.rp-spinner { width: 28px; height: 28px; border: 3px solid var(--border); border-top-color: var(--brand); border-radius: 50%; animation: spin 0.8s linear infinite; }
+.rp-empty { display: flex; flex-direction: column; align-items: center; gap: 10px; color: var(--ink-ghost); padding: 64px 0; font-size: 14px; }
+.rp-section { margin-bottom: 24px; }
+.rp-section-title { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.10em; color: var(--ink-soft); margin-bottom: 10px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
+.rp-section-title.overdue { color: var(--red); }
+.rp-row { display: flex; align-items: flex-start; gap: 12px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-lg); padding: 14px 16px; margin-bottom: 8px; transition: box-shadow 0.15s; }
+.rp-row:hover { box-shadow: var(--sh-sm); }
+.rp-emoji { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+.rp-body { flex: 1; }
+.rp-contact { font-size: 13px; font-weight: 700; color: var(--ink); }
+.rp-type { font-size: 11px; color: var(--ink-soft); text-transform: capitalize; margin-top: 1px; }
+.rp-note { font-size: 12px; color: var(--ink-mid); margin-top: 4px; }
+.rp-phone { display: inline-flex; align-items: center; gap: 4px; font-size: 11px; color: var(--brand); margin-top: 4px; }
+.rp-phone:hover { text-decoration: underline; }
+.rp-right { display: flex; flex-direction: column; align-items: flex-end; gap: 5px; flex-shrink: 0; }
+.rp-due { font-size: 11px; font-weight: 700; padding: 2px 9px; border-radius: 20px; background: var(--amber-bg); color: var(--amber); border: 1px solid #fde68a; }
+.rp-due.overdue { background: var(--red-bg); color: var(--red); border-color: #fca5a5; }
+.rp-due.today   { background: var(--green-bg); color: var(--green); border-color: #6ee7b7; }
+.rp-date { font-size: 10px; color: var(--ink-ghost); }
+.rp-done-btn { display: flex; align-items: center; gap: 5px; padding: 5px 11px; background: var(--green-bg); border: 1px solid #6ee7b7; border-radius: var(--r-sm); color: var(--green); font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
+.rp-done-btn:hover { background: var(--green); color: white; border-color: var(--green); }

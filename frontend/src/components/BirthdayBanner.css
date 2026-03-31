@@ -1,0 +1,15 @@
+.bb-wrap { display: flex; flex-direction: column; gap: 8px; margin-bottom: 20px; }
+.bb-banner { display: flex; align-items: flex-start; gap: 12px; padding: 12px 16px; border-radius: var(--r-lg); border: 1px solid; }
+.bb-banner.today    { background: var(--amber-bg); border-color: #fde68a; }
+.bb-banner.upcoming { background: var(--brand-bg);  border-color: var(--brand-light); }
+.bb-icon { width: 32px; height: 32px; border-radius: 10px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+.bb-banner.today    .bb-icon { background: #fde68a; color: var(--amber); }
+.bb-banner.upcoming .bb-icon { background: var(--brand-light); color: var(--brand-dark); }
+.bb-content { flex: 1; }
+.bb-label { font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.1em; color: var(--ink-soft); display: block; margin-bottom: 7px; }
+.bb-chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.bb-chip { display: flex; align-items: center; gap: 5px; padding: 3px 11px; border-radius: 20px; font-size: 12px; font-weight: 600; background: white; border: 1px solid var(--border); color: var(--ink); }
+.bb-chip.today { background: #fef3c7; border-color: #fcd34d; color: #92400e; font-weight: 800; }
+.bb-chip.week  { background: var(--brand-bg); border-color: var(--brand-light); color: var(--brand-dark); }
+.bb-days      { font-size: 10px; font-weight: 700; background: rgba(0,0,0,0.06); padding: 1px 5px; border-radius: 8px; }
+.bb-days.week { background: var(--brand-light); color: var(--brand-darker); }

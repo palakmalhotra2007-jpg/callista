@@ -1,0 +1,48 @@
+.app { display: flex; min-height: 100vh; }
+.main { flex: 1; margin-left: 248px; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
+.main.panel-open { margin-right: 360px; }
+
+/* Topbar */
+.topbar {
+  background: var(--surface); border-bottom: 1px solid var(--border);
+  padding: 0 28px; height: 58px;
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 5; box-shadow: var(--sh-xs);
+}
+.topbar-left { display: flex; align-items: center; gap: 10px; }
+.topbar-title { font-size: 1.05rem; font-weight: 800; color: var(--ink); }
+.topbar-count { font-size: 11px; font-weight: 600; color: var(--ink-soft); background: var(--surface-2); border: 1px solid var(--border); padding: 2px 9px; border-radius: 20px; }
+.topbar-right { display: flex; align-items: center; gap: 8px; }
+
+.topbar-refresh { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 10px; background: transparent; color: var(--ink-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.topbar-refresh:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-bg); }
+
+.private-btn { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 1px solid var(--border); border-radius: 10px; background: transparent; color: var(--ink-soft); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.private-btn:hover  { border-color: var(--teal); color: var(--teal); background: var(--teal-bg); }
+.private-btn.active { background: var(--teal-bg); border-color: var(--teal); color: var(--teal); }
+
+.view-group { display: flex; border: 1px solid var(--border); border-radius: 10px; overflow: hidden; }
+.view-btn { width: 32px; height: 32px; border: none; background: transparent; color: var(--ink-ghost); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
+.view-btn.active { background: var(--ink); color: white; }
+.view-btn:hover:not(.active) { background: var(--surface-2); color: var(--ink); }
+
+.add-btn { display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 18px; background: var(--brand); color: white; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s, transform 0.1s; box-shadow: var(--sh-brand); }
+.add-btn:hover  { background: var(--brand-dark); }
+.add-btn:active { transform: scale(0.98); }
+
+/* Content */
+.content { flex: 1; padding: 24px 28px; }
+
+/* Grid */
+.contacts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+.contacts-grid.list { grid-template-columns: 1fr; gap: 6px; }
+
+/* Skeleton */
+.skel-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+.skel-card { height: 120px; background: linear-gradient(90deg, var(--surface) 25%, var(--surface-2) 50%, var(--surface) 75%); background-size: 400% 100%; border: 1px solid var(--border); border-radius: var(--r-lg); animation: shimmer 1.6s ease-in-out infinite; }
+
+/* App loading */
+.app-loading { display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg); }
+.app-spin { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--brand); border-radius: 50%; animation: spin 0.8s linear infinite; }
+
+@media (max-width: 1100px) { .main { margin-left: 0; } .main.panel-open { margin-right: 0; } .content { padding: 16px; } .topbar { padding: 0 16px; } }
