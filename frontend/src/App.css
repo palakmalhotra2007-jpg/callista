@@ -1,7 +1,23 @@
 .app { display: flex; min-height: 100vh; }
 .main { flex: 1; margin-left: 248px; min-height: 100vh; display: flex; flex-direction: column; background: var(--bg); }
 .main.panel-open { margin-right: 360px; }
+.main-content {
+  margin-left: 248px;
+  padding: 20px;
+}
 
+@media (max-width: 1024px) {
+  .main-content {
+    margin-left: 200px;
+  }
+}
+
+@media (max-width: 768px) {
+  .main-content {
+    margin-left: 0;
+    padding-top: 60px;
+  }
+}
 /* Topbar */
 .topbar {
   background: var(--surface); border-bottom: 1px solid var(--border);
