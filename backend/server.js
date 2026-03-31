@@ -8,7 +8,13 @@ const contactRoutes = require('./src/routes/contactRoutes');
 const { reminderRouter, birthdayRouter, analyticsRouter, tagRouter } = require('./src/routes/otherRoutes');
 
 const app = express();
-app.use(cors());
+app.use(cors({
+  origin: [
+    'http://localhost:5173',
+    'https://callista-sigma.vercel.app'
+  ],
+  credentials: true
+}));
 app.use(express.json());
 
 app.use('/api/auth',      authRoutes);
