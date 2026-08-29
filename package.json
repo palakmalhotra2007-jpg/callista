@@ -9,6 +9,7 @@
     "server:dev": "nodemon server/server.js",
     "client:dev": "vite",
     "build": "vite build",
+    "vercel-build": "vite build && node scripts/copy-dist-to-public.js",
     "preview": "vite preview",
     "start": "node server/server.js",
     "migrate:firebase": "node scripts/migrate-to-firebase.js"
