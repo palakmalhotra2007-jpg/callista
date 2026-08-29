@@ -1,16 +1,144 @@
-.pm-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.45); display: flex; align-items: center; justify-content: center; z-index: 50; backdrop-filter: blur(3px); }
-.pm-card { background: var(--surface); border-radius: var(--r-xl); padding: 32px 28px; width: 320px; box-shadow: var(--sh-xl); text-align: center; }
-.pm-icon { width: 52px; height: 52px; border-radius: 14px; background: var(--violet-bg); display: flex; align-items: center; justify-content: center; color: var(--violet); margin: 0 auto 16px; }
-.pm-title { font-family: 'Plus Jakarta Sans', sans-serif; font-size: 1.2rem; color: var(--ink); margin-bottom: 4px; }
-.pm-sub   { font-size: 13px; color: var(--ink-soft); margin-bottom: 20px; }
-.pm-dots  { display: flex; justify-content: center; gap: 12px; margin-bottom: 20px; }
-.pm-dot   { width: 12px; height: 12px; border-radius: 50%; background: var(--border); transition: background 0.15s; }
-.pm-dot.filled { background: var(--violet); }
-.pm-pad   { display: grid; grid-template-columns: repeat(3,1fr); gap: 8px; margin-bottom: 16px; }
-.pm-key   { height: 52px; background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r-lg); font-size: 17px; font-weight: 500; color: var(--ink); cursor: pointer; transition: all 0.1s; }
-.pm-key:hover  { background: var(--surface-3); border-color: var(--border-md); }
-.pm-key:active { transform: scale(0.95); }
-.pm-key.del    { font-size: 13px; color: var(--ink-soft); }
-.pm-error { font-size: 12px; color: var(--red); margin-bottom: 8px; min-height: 18px; }
-.pm-cancel { width: 100%; height: 38px; background: transparent; border: 1px solid var(--border); border-radius: var(--r-md); color: var(--ink-soft); font-size: 13px; cursor: pointer; transition: all 0.15s; }
-.pm-cancel:hover { background: var(--surface-2); color: var(--ink); }
+.pm-overlay {
+  position: fixed; inset: 0;
+  background: rgba(12,13,30,0.55);
+  display: flex; align-items: center; justify-content: center;
+  z-index: 999;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+.pm-card {
+  background: var(--surface);
+  border-radius: var(--r-xl);
+  padding: 36px 32px 28px;
+  width: 340px;
+  box-shadow: var(--sh-xl);
+  text-align: center;
+  border: 1px solid var(--border);
+}
+
+/* Icon */
+.pm-icon {
+  width: 64px; height: 64px;
+  border-radius: 20px;
+  background: linear-gradient(135deg, var(--brand) 0%, #818cf8 100%);
+  display: flex; align-items: center; justify-content: center;
+  color: #fff;
+  margin: 0 auto 20px;
+  box-shadow: var(--sh-brand);
+}
+
+.pm-title {
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  font-size: 1.3rem;
+  font-weight: 800;
+  color: var(--ink);
+  margin: 0 0 6px;
+  letter-spacing: -0.02em;
+}
+
+.pm-sub {
+  font-size: 13px;
+  color: var(--ink-soft);
+  margin: 0 0 28px;
+}
+
+/* 4 dot indicators */
+.pm-dots {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 6px;
+}
+
+.pm-dot {
+  width: 16px; height: 16px;
+  border-radius: 50%;
+  background: var(--surface-3);
+  border: 2px solid var(--border-md);
+  transition: background 0.2s, border-color 0.2s, transform 0.15s, box-shadow 0.2s;
+  flex-shrink: 0;
+}
+
+.pm-dot.filled {
+  background: var(--brand);
+  border-color: var(--brand);
+  transform: scale(1.2);
+  box-shadow: 0 0 0 4px var(--brand-glow);
+}
+
+/* Error */
+.pm-error {
+  font-size: 12px;
+  color: var(--red);
+  min-height: 20px;
+  margin: 8px 0 16px;
+  font-weight: 500;
+}
+
+/* Numpad grid */
+.pm-pad {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.pm-key {
+  height: 60px;
+  background: var(--surface-2);
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-lg);
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--ink);
+  cursor: pointer;
+  transition: background 0.12s, transform 0.08s, border-color 0.12s, color 0.12s;
+  display: flex; align-items: center; justify-content: center;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+.pm-key:hover:not(:disabled) {
+  background: var(--brand-bg);
+  border-color: var(--brand-light);
+  color: var(--brand);
+}
+
+.pm-key:active:not(:disabled) {
+  transform: scale(0.91);
+  background: var(--surface-3);
+}
+
+.pm-key:disabled { opacity: 0.45; cursor: not-allowed; }
+
+.pm-key.del {
+  font-size: 14px;
+  color: var(--ink-soft);
+}
+
+.pm-key.del:hover:not(:disabled) {
+  background: var(--red-bg);
+  border-color: #fca5a5;
+  color: var(--red);
+}
+
+/* Cancel button */
+.pm-cancel {
+  width: 100%;
+  height: 44px;
+  background: transparent;
+  border: 1.5px solid var(--border);
+  border-radius: var(--r-md);
+  color: var(--ink-soft);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.15s;
+}
+
+.pm-cancel:hover {
+  background: var(--surface-2);
+  border-color: var(--border-md);
+  color: var(--ink);
+}

@@ -59,7 +59,7 @@ export default function PinModal({ onVerified, onClose }) {
         transition={{ type: 'spring', stiffness: 380, damping: 28 }}
         onClick={e => e.stopPropagation()}
       >
-        <div className="pm-icon"><Shield size={22} /></div>
+        <div className="pm-icon"><Shield size={26} strokeWidth={1.75} /></div>
         <h3 className="pm-title">Private Contacts</h3>
         <p className="pm-sub">Enter your 4-digit PIN to unlock</p>
 
