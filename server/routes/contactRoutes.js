@@ -29,10 +29,41 @@ router.get('/', protect, async (req, res) => {
 
     let contacts = snapshot.docs.map(formatContact);
 
-    // Filter private
-    if (showPrivate !== 'true') {
+    // showPrivate behaviour:
+    //   'true'   → PIN has been verified; return full data for private contacts
+    //   'always' → always include private contacts but strip sensitive fields
+    //              so the frontend can render blurred placeholder cards
+    //   omitted  → legacy / unauthenticated; exclude private contacts entirely
+    if (showPrivate === 'true') {
+      // Full data — no filtering needed
+    } else if (showPrivate === 'always') {
+      // Include private contacts but redact PII so nothing leaks through the wire
+      contacts = contacts.map(c => {
+        if (!c.isPrivate) return c;
+        return {
+          _id:       c._id,
+          userId:    c.userId,
+          name:      '••••••••',
+          email:     '',
+          phones:    [{ label: 'Mobile', number: '•••••••••••' }],
+          address:   {},
+          category:  c.category,   // kept so category filter still works
+          tags:      [],
+          favorite:  false,
+          isPrivate: true,
+          notes:     '',
+          followups: [],
+          reminders: [],
+          birthday:  null,
+          createdAt: c.createdAt,
+          updatedAt: c.updatedAt,
+        };
+      });
+    } else {
+      // Legacy: exclude private contacts entirely
       contacts = contacts.filter(c => !c.isPrivate);
     }
+
     // Filter category
     if (category) {
       contacts = contacts.filter(c => c.category === category);
@@ -45,14 +76,15 @@ router.get('/', protect, async (req, res) => {
     if (tag) {
       contacts = contacts.filter(c => Array.isArray(c.tags) && c.tags.includes(tag));
     }
-    // Search
+    // Search — skip redacted private contacts (nothing to match against)
     if (search) {
       const s = search.toLowerCase().trim();
       contacts = contacts.filter(c => {
-        const nameMatch = c.name && c.name.toLowerCase().includes(s);
+        if (c.isPrivate && showPrivate !== 'true') return false;
+        const nameMatch  = c.name  && c.name.toLowerCase().includes(s);
         const emailMatch = c.email && c.email.toLowerCase().includes(s);
         const phoneMatch = c.phones && c.phones.some(p => p.number && p.number.toLowerCase().includes(s));
-        const tagMatch = c.tags && c.tags.some(t => t && t.toLowerCase().includes(s));
+        const tagMatch   = c.tags  && c.tags.some(t => t && t.toLowerCase().includes(s));
         return nameMatch || emailMatch || phoneMatch || tagMatch;
       });
     }

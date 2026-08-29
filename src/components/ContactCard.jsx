@@ -13,12 +13,22 @@ const initials = name => name.split(' ').map(n => n[0]).join('').toUpperCase().s
 const avColor  = name  => AV_COLORS[name.charCodeAt(0) % AV_COLORS.length];
 const fmtBday  = d     => new Date(d).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
 
-export default function ContactCard({ contact, viewMode, isSelected, onClick, onEdit, onDelete, onToggleFavorite }) {
+export default function ContactCard({
+  contact, viewMode, isSelected, pinUnlocked,
+  onClick, onEdit, onDelete, onToggleFavorite, onRequestPin,
+}) {
   const { name, phones = [], email, address = {}, category, favorite, birthday, tags = [], isPrivate } = contact;
   const color    = avColor(name);
   const catColor = CAT_COLORS[category] || '#6b6c9e';
   const primary  = phones[0]?.number || '—';
-  const stop = fn => e => { e.stopPropagation(); fn(); };
+  const stop     = fn => e => { e.stopPropagation(); fn(); };
+
+  // A private contact whose PIN hasn't been entered yet
+  const locked = isPrivate && !pinUnlocked;
+
+  function handleClick() {
+    if (locked) { onRequestPin?.(); } else { onClick(); }
+  }
 
   return (
     <motion.div
@@ -27,24 +37,36 @@ export default function ContactCard({ contact, viewMode, isSelected, onClick, on
       animate={{ opacity: 1, y: 0 }}
       exit={{ opacity: 0, scale: 0.97 }}
       transition={{ duration: 0.14 }}
-      className={`card${viewMode === 'list' ? ' list' : ''}${isSelected ? ' selected' : ''}`}
-      onClick={onClick}
+      className={`card${viewMode === 'list' ? ' list' : ''}${isSelected ? ' selected' : ''}${locked ? ' card-locked' : ''}`}
+      onClick={handleClick}
     >
-      <div className="card-top">
+      {/* ── Blur overlay for locked private contacts ── */}
+      {locked && (
+        <div className="card-lock-overlay">
+          <div className="card-lock-pill">
+            <Lock size={13} />
+            <span>Private — tap to unlock</span>
+          </div>
+        </div>
+      )}
+
+      <div className={`card-top${locked ? ' card-blurred' : ''}`}>
         <div className="card-avatar" style={{ background: color }}>
-          {initials(name)}
+          {locked ? '??' : initials(name)}
           {isPrivate && <span className="card-priv-dot" title="Private" />}
         </div>
         <div className="card-info">
           <div className="card-header">
-            <span className="card-name">{name}</span>
-            <span className="card-cat" style={{ color: catColor, borderColor: catColor + '55', background: catColor + '15' }}>{category}</span>
+            <span className="card-name">{locked ? '••••••••' : name}</span>
+            <span className="card-cat" style={{ color: catColor, borderColor: catColor + '55', background: catColor + '15' }}>
+              {locked ? '······' : category}
+            </span>
           </div>
-          <div className="card-row"><Phone size={11} />{primary}{phones.length > 1 && <span className="card-more">+{phones.length - 1}</span>}</div>
-          {email && <div className="card-row"><Mail size={11} />{email}</div>}
-          {address?.city && <div className="card-row"><MapPin size={11} />{address.city}{address.country ? ', ' + address.country : ''}</div>}
-          {birthday && <div className="card-row card-bday"><Calendar size={11} />{fmtBday(birthday)}</div>}
-          {tags.length > 0 && (
+          <div className="card-row"><Phone size={11} />{locked ? '•••••••••••' : primary}{!locked && phones.length > 1 && <span className="card-more">+{phones.length - 1}</span>}</div>
+          {!locked && email    && <div className="card-row"><Mail     size={11} />{email}</div>}
+          {!locked && address?.city && <div className="card-row"><MapPin size={11} />{address.city}{address.country ? ', ' + address.country : ''}</div>}
+          {!locked && birthday && <div className="card-row card-bday"><Calendar size={11} />{fmtBday(birthday)}</div>}
+          {!locked && tags.length > 0 && (
             <div className="card-tags">
               {tags.slice(0, 3).map(t => <span key={t} className="card-tag"><Tag size={9} />{t}</span>)}
               {tags.length > 3 && <span className="card-tag">+{tags.length - 3}</span>}
@@ -52,13 +74,16 @@ export default function ContactCard({ contact, viewMode, isSelected, onClick, on
           )}
         </div>
       </div>
-      <div className="card-actions">
+
+      <div className={`card-actions${locked ? ' card-blurred' : ''}`}>
         {isPrivate && <Lock size={11} style={{ color: 'var(--teal)', opacity: 0.7, marginRight: 3 }} />}
-        <button className={`card-btn fav-btn${favorite ? ' fav-on' : ''}`} onClick={stop(onToggleFavorite)} title="Favourite">
-          <Star size={12} fill={favorite ? 'currentColor' : 'none'} />
-        </button>
-        <button className="card-btn edit-btn" onClick={stop(onEdit)} title="Edit"><Edit2 size={12} /></button>
-        <button className="card-btn del-btn" onClick={stop(onDelete)} title="Delete"><Trash2 size={12} /></button>
+        {!locked && <>
+          <button className={`card-btn fav-btn${favorite ? ' fav-on' : ''}`} onClick={stop(onToggleFavorite)} title="Favourite">
+            <Star size={12} fill={favorite ? 'currentColor' : 'none'} />
+          </button>
+          <button className="card-btn edit-btn" onClick={stop(onEdit)}   title="Edit"><Edit2   size={12} /></button>
+          <button className="card-btn del-btn"  onClick={stop(onDelete)} title="Delete"><Trash2 size={12} /></button>
+        </>}
       </div>
     </motion.div>
   );

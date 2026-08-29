@@ -55,12 +55,14 @@ export default function App() {
       if (category)      p.category    = category;
       if (showFavorites) p.favorite    = true;
       if (activeTag)     p.tag         = activeTag;
-      if (pinUnlocked)   p.showPrivate = true;
+      // Always fetch private contacts so blurred cards show in the grid.
+      // The server strips sensitive fields when showPrivate is omitted.
+      p.showPrivate = 'always';
       const res = await getContacts(p);
       setContacts(res.data.data);
     } catch { toast.error('Failed to load contacts'); }
     finally  { setLoading(false); }
-  }, [user, search, category, showFavorites, activeTag, pinUnlocked]);
+  }, [user, search, category, showFavorites, activeTag]);
 
   const fetchBirthdays = useCallback(async () => {
     if (!user) return;
@@ -187,9 +189,16 @@ export default function App() {
               <button className="topbar-refresh" onClick={fetchContacts} title="Refresh"><RefreshCw size={13} /></button>
               {user.hasPin && (
                 <button className={`private-btn${pinUnlocked ? ' active' : ''}`}
-                  onClick={() => { if (pinUnlocked) { sessionStorage.removeItem('pb_pin_ok'); setPinUnlocked(false); } else setShowPin(true); }}>
+                  onClick={() => {
+                    if (pinUnlocked) {
+                      sessionStorage.removeItem('pb_pin_ok');
+                      setPinUnlocked(false);
+                    } else {
+                      setShowPin(true);
+                    }
+                  }}>
                   {pinUnlocked ? <Unlock size={13} /> : <Lock size={13} />}
-                  {pinUnlocked ? 'Hide Private' : 'Show Private'}
+                  {pinUnlocked ? 'Lock Private' : 'Unlock Private'}
                 </button>
               )}
               <div className="view-group">
@@ -212,7 +221,9 @@ export default function App() {
                   {contacts.map(c => (
                     <ContactCard key={c._id} contact={c} viewMode={viewMode}
                       isSelected={selected?._id === c._id}
+                      pinUnlocked={pinUnlocked}
                       onClick={() => setSelected(c)}
+                      onRequestPin={() => setShowPin(true)}
                       onEdit={() => setEditContact(c)}
                       onDelete={() => setToDelete(c)}
                       onToggleFavorite={() => handleFav(c._id)} />
@@ -230,7 +241,7 @@ export default function App() {
       </main>
 
       <AnimatePresence>
-        {selected && page === 'contacts' && (
+        {selected && page === 'contacts' && !( selected.isPrivate && !pinUnlocked ) && (
           <ContactDetail contact={selected}
             onClose={() => setSelected(null)}
             onEdit={() => setEditContact(selected)}
@@ -257,8 +268,12 @@ export default function App() {
       <AnimatePresence>
         {showPin && (
           <PinModal
-            onVerified={() => { sessionStorage.setItem('pb_pin_ok', '1'); setPinUnlocked(true); setShowPin(false); }}
-            onClose={() => setShowPin(false)} />
+            onVerified={() => {
+              sessionStorage.setItem('pb_pin_ok', '1');
+              setPinUnlocked(true);
+              setShowPin(false);
+            }}
+            onClose={() => { setShowPin(false); setSelected(null); }} />
         )}
       </AnimatePresence>
     </div>
