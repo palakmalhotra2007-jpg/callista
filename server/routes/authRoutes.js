@@ -8,6 +8,17 @@ const router = Router();
 
 const sign = id => jwt.sign({ userId: id }, process.env.JWT_SECRET || 'secret', { expiresIn: '7d' });
 
+// Guard: if Firebase didn't initialize (missing env vars in production), return 503
+router.use((req, res, next) => {
+  if (!db) {
+    return res.status(503).json({
+      success: false,
+      message: 'Database not configured. Set FIREBASE_SERVICE_ACCOUNT (or FIREBASE_PROJECT_ID + FIREBASE_CLIENT_EMAIL + FIREBASE_PRIVATE_KEY) in your environment variables.',
+    });
+  }
+  next();
+});
+
 router.post('/register', async (req, res) => {
   try {
     const { username, password } = req.body;

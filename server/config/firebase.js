@@ -2,6 +2,7 @@ import admin from 'firebase-admin';
 import dotenv from 'dotenv';
 import fs from 'fs';
 import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
 
@@ -9,53 +10,59 @@ let db;
 
 try {
   if (!admin.apps.length) {
-    const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH;
+    // Resolve the service account key path relative to the project root,
+    // not the file's own directory — important for local dev.
+    const __filename = fileURLToPath(import.meta.url);
+    const projectRoot = path.resolve(path.dirname(__filename), '../../');
+
+    const serviceAccountPath = process.env.FIREBASE_SERVICE_ACCOUNT_PATH
+      ? path.resolve(projectRoot, process.env.FIREBASE_SERVICE_ACCOUNT_PATH)
+      : null;
+
     const serviceAccountJson = process.env.FIREBASE_SERVICE_ACCOUNT;
-    const projectId = process.env.FIREBASE_PROJECT_ID;
-    const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
-    const privateKey = process.env.FIREBASE_PRIVATE_KEY
+    const projectId    = process.env.FIREBASE_PROJECT_ID;
+    const clientEmail  = process.env.FIREBASE_CLIENT_EMAIL;
+    const privateKey   = process.env.FIREBASE_PRIVATE_KEY
       ? process.env.FIREBASE_PRIVATE_KEY.replace(/\\n/g, '\n')
       : undefined;
 
-    if (serviceAccountPath && fs.existsSync(path.resolve(serviceAccountPath))) {
-      const fileContent = JSON.parse(fs.readFileSync(path.resolve(serviceAccountPath), 'utf8'));
-      admin.initializeApp({
-        credential: admin.credential.cert(fileContent),
-      });
+    if (serviceAccountPath && fs.existsSync(serviceAccountPath)) {
+      // Local dev: read serviceAccountKey.json from disk
+      const fileContent = JSON.parse(fs.readFileSync(serviceAccountPath, 'utf8'));
+      admin.initializeApp({ credential: admin.credential.cert(fileContent) });
       console.log('✅ Firebase Admin initialized using Service Account JSON file.');
+
     } else if (serviceAccountJson) {
+      // Production option A: paste the entire JSON as a single env var
       const parsed = JSON.parse(serviceAccountJson);
-      admin.initializeApp({
-        credential: admin.credential.cert(parsed),
-      });
+      admin.initializeApp({ credential: admin.credential.cert(parsed) });
       console.log('✅ Firebase Admin initialized using FIREBASE_SERVICE_ACCOUNT JSON string.');
+
     } else if (projectId && clientEmail && privateKey) {
+      // Production option B: three individual env vars
       admin.initializeApp({
-        credential: admin.credential.cert({
-          projectId,
-          clientEmail,
-          privateKey,
-        }),
+        credential: admin.credential.cert({ projectId, clientEmail, privateKey }),
       });
-      console.log('✅ Firebase Admin initialized using environment variables.');
-    } else if (projectId) {
-      admin.initializeApp({
-        projectId,
-      });
-      console.log('ℹ️ Firebase Admin initialized with Project ID:', projectId);
+      console.log('✅ Firebase Admin initialized using individual environment variables.');
+
     } else {
-      console.warn('\n⚠️ WARNING: Firebase credentials not found in .env!');
-      console.warn('Please add serviceAccountKey.json or FIREBASE_PROJECT_ID, FIREBASE_CLIENT_EMAIL, FIREBASE_PRIVATE_KEY in .env.\n');
-      // Initialize with default or placeholder so app doesn't crash on boot
-      admin.initializeApp({
-        projectId: 'callista-demo',
-      });
+      // No credentials found — throw so the server logs a clear error and
+      // every API route returns 500 instead of silently hitting a dummy project.
+      throw new Error(
+        'Firebase credentials not configured. ' +
+        'Set FIREBASE_SERVICE_ACCOUNT (full JSON string) or ' +
+        'FIREBASE_PROJECT_ID + FIREBASE_CLIENT_EMAIL + FIREBASE_PRIVATE_KEY ' +
+        'in your environment variables.'
+      );
     }
   }
 
   db = admin.firestore();
+  console.log('✅ Firestore connected.');
 } catch (err) {
-  console.error('❌ Error initializing Firebase Admin:', err.message);
+  console.error('❌ Firebase init failed:', err.message);
+  // Re-export db as null so route handlers can detect it and return 503
+  db = null;
 }
 
 export { admin, db };
