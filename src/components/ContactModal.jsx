@@ -107,6 +107,10 @@ export default function ContactModal({ contact, onClose, onSaved }) {
     if (form.address.lat && (isNaN(Number(form.address.lat)) || Number(form.address.lat) < -90 || Number(form.address.lat) > 90)) errs.lat = 'Must be between -90 and 90';
     if (form.address.lng && (isNaN(Number(form.address.lng)) || Number(form.address.lng) < -180 || Number(form.address.lng) > 180)) errs.lng = 'Must be between -180 and 180';
     if (form.notes.length > 500) errs.notes = 'Max 500 characters';
+    if (form.birthday) {
+      var today = new Date().toISOString().split('T')[0];
+      if (form.birthday > today) errs.birthday = 'Birthday cannot be in the future';
+    }
     return errs;
   }
 
@@ -271,7 +275,8 @@ async function handleSubmit(e) {
 
                 <div className="form-group">
                   <label className="form-label"><Calendar size={11} />Date of Birth</label>
-                  <input name="birthday" type="date" value={form.birthday} onChange={handleField} className="form-input" />
+                  <input name="birthday" type="date" max={new Date().toISOString().split('T')[0]} value={form.birthday} onChange={handleField} className={'form-input' + (errors.birthday ? ' has-error' : '')} />
+                  {errors.birthday && <span className="form-error">{errors.birthday}</span>}
                 </div>
 
                 <div className="form-group">

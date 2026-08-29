@@ -1,6 +1,6 @@
-# 📱 Callista PhoneBook Pro — Unified Architecture & Supabase Edition
+# 📱 Callista PhoneBook Pro — Unified Architecture & Firebase Edition
 
-A modern, full-stack Contact Management Application built with React, Vite, Express, and **Supabase (PostgreSQL)**.
+A modern, full-stack Contact Management Application built with React, Vite, Express, and **Firebase (Cloud Firestore)**.
 
 ---
 
@@ -21,37 +21,39 @@ npm run dev
 
 ---
 
-## 🗄️ Supabase Setup (1-Minute Guide)
+## 🔥 Firebase Setup (1-Minute Guide)
 
-1. Go to [https://supabase.com](https://supabase.com) and create a free project.
-2. Open the **SQL Editor** in your Supabase Dashboard:
-   - Copy the contents of [`supabase/schema.sql`](./supabase/schema.sql) and paste it into the editor.
-   - Click **Run** to create the `users` and `contacts` tables, indexes, and triggers.
-3. Open your Supabase **Project Settings** → **API**:
-   - Copy `Project URL` and `anon` / `service_role` key.
-4. Add them to your `.env` file in the project root:
+1. Go to [https://console.firebase.google.com/](https://console.firebase.google.com/) and create a project (or select an existing one).
+2. Go to **Build** → **Firestore Database** → **Create Database** (choose *Start in production mode* or *test mode*).
+3. Generate your service account key:
+   - Click the ⚙️ gear icon (Project Settings) → **Service Accounts** tab.
+   - Click **Generate new private key**.
+   - A `.json` file will download.
+4. Rename or place that file as `serviceAccountKey.json` in the root folder of this project (it is already in `.gitignore` so it won't be pushed to git).
+5. In your [`.env`](./.env) file:
    ```env
    PORT=5000
    JWT_SECRET=your_jwt_secret_key_here
-   SUPABASE_URL=https://your-project-ref.supabase.co
-   SUPABASE_KEY=your-supabase-anon-or-service-role-key
+   FIREBASE_SERVICE_ACCOUNT_PATH=./serviceAccountKey.json
    ```
+
+*(Alternative: You can also pass `FIREBASE_PROJECT_ID`, `FIREBASE_CLIENT_EMAIL`, and `FIREBASE_PRIVATE_KEY` directly in `.env`)*
 
 ---
 
-## 🔄 Migrate Existing Data from MongoDB to Supabase
+## 🔄 Migrate Existing Data from MongoDB to Firebase
 
-If you have existing contacts in MongoDB that you want to transfer into Supabase:
+If you have existing contacts in MongoDB that you want to copy into Firebase Firestore:
 
-1. Add your `MONGO_URI` to `.env`:
+1. Add your `MONGO_URI` to [`.env`](./.env):
    ```env
    MONGO_URI=mongodb+srv://...
    ```
 2. Run the automated migration script:
    ```bash
-   npm run migrate:supabase
+   npm run migrate:firebase
    ```
-   This will automatically copy all users, passwords, PINs, contacts, reminders, follow-ups, and tags into Supabase.
+   This will automatically copy all users, passwords, PINs, contacts, reminders, follow-ups, and tags directly into Firestore.
 
 ---
 
@@ -62,7 +64,8 @@ Callista/
 ├── index.html            ← Vite frontend HTML root
 ├── vite.config.js        ← Vite config with API proxy
 ├── package.json          ← Unified scripts & dependencies
-├── .env                  ← Environment variables (Supabase, JWT, Port)
+├── serviceAccountKey.json← (Optional) Firebase private key
+├── .env                  ← Environment variables
 ├── .env.example          ← Sample environment template
 │
 ├── src/                  ← Frontend React Source
@@ -77,19 +80,16 @@ Callista/
 ├── server/               ← Backend Express Server
 │   ├── server.js         ← API server entrypoint & static serve
 │   ├── config/
-│   │   └── supabase.js   ← Supabase client & shape mappers
+│   │   └── firebase.js   ← Firebase Admin & Firestore init
 │   ├── middleware/
 │   │   └── authMiddleware.js ← JWT authentication
 │   └── routes/
-│       ├── authRoutes.js     ← Auth & PIN endpoints
+│       ├── authRoutes.js     ← Auth & PIN endpoints (Firestore)
 │       ├── contactRoutes.js  ← Contacts CRUD, CSV import, PDF export
 │       └── otherRoutes.js    ← Reminders, birthdays, analytics, tags
 │
-├── supabase/
-│   └── schema.sql        ← PostgreSQL table definitions & indexes
-│
 └── scripts/
-    └── migrate-mongo-to-supabase.js ← MongoDB to Supabase migration tool
+    └── migrate-to-firebase.js ← MongoDB to Firebase migration tool
 ```
 
 ---
@@ -103,13 +103,13 @@ Callista/
 | `npm run client:dev` | Runs frontend only with Vite |
 | `npm run build` | Builds optimized frontend bundle into `dist/` |
 | `npm start` | Runs Express production server (serves API & `dist/`) |
-| `npm run migrate:supabase` | Migrates MongoDB users & contacts to Supabase |
+| `npm run migrate:firebase` | Migrates MongoDB users & contacts to Firebase Firestore |
 
 ---
 
 ## ✨ Features
 - ⚡ **Single-command runtime**: Concurrently run client + server with `npm run dev`
-- 🗄️ **Supabase Database**: Fast PostgreSQL storage with JSONB support
+- 🔥 **Firebase Firestore**: Scalable cloud NoSQL database
 - 🔐 **Authentication**: Secure bcrypt password hashing + JWT tokens + 4-digit PIN lock
 - 🗺️ **Interactive Details**: Google Maps integration, quick actions, call/email links
 - 🎂 **Birthday Tracker**: Upcoming 30-day birthday widget and reminders

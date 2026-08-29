@@ -6,6 +6,15 @@ import { parse } from 'csv-parse/sync';
 import protect from '../middleware/authMiddleware.js';
 import { db, formatContact } from '../config/firebase.js';
 
+function validatePayload(body) {
+  if (body.birthday) {
+    const today = new Date().toISOString().split('T')[0];
+    if (body.birthday > today) {
+      throw new Error('Birthday cannot be in the future');
+    }
+  }
+}
+
 const router = Router();
 const upload = multer({ storage: multer.memoryStorage() });
 
@@ -163,6 +172,7 @@ router.post('/import/csv', protect, upload.single('file'), async (req, res) => {
 // Force create (skip duplicate check)
 router.post('/force', protect, async (req, res) => {
   try {
+    validatePayload(req.body);
     const payload = {
       userId: req.userId,
       name: req.body.name?.trim(),
@@ -192,6 +202,7 @@ router.post('/force', protect, async (req, res) => {
 // Create with duplicate detection
 router.post('/', protect, async (req, res) => {
   try {
+    validatePayload(req.body);
     const nums = (req.body.phones || []).map(p => p.number?.trim()).filter(Boolean);
     const cleanName = (req.body.name || '').trim();
 
@@ -254,6 +265,7 @@ router.get('/:id', protect, async (req, res) => {
 // Update
 router.put('/:id', protect, async (req, res) => {
   try {
+    validatePayload(req.body);
     const docRef = db.collection('contacts').doc(req.params.id);
     const doc = await docRef.get();
     if (!doc.exists || doc.data().userId !== req.userId) {
