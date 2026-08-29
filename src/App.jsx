@@ -143,7 +143,7 @@ export default function App() {
       const r = await exportPDF();
       const url = URL.createObjectURL(new Blob([r.data], { type: 'application/pdf' }));
       const a = document.createElement('a');
-      a.href = url; a.download = 'Dial-Directory.pdf';
+      a.href = url; a.download = 'Callista-Directory.pdf';
       document.body.appendChild(a); a.click();
       document.body.removeChild(a); URL.revokeObjectURL(url);
       toast.success('📄 Downloaded!');
@@ -154,7 +154,7 @@ export default function App() {
     <div className="app-loading">
       <div style={{ textAlign: 'center' }}>
         <div className="app-spin" style={{ margin: '0 auto 12px' }} />
-        <p style={{ color: 'var(--ink-soft)', fontSize: 13 }}>Loading Dial…</p>
+        <p style={{ color: 'var(--ink-soft)', fontSize: 13 }}>Loading Callista…</p>
       </div>
     </div>
   );

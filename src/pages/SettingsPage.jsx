@@ -61,8 +61,8 @@ export default function SettingsPage() {
       <div className="sp-section">
         <div className="sp-section-hdr">ℹ About</div>
         <div className="sp-card">
-          <h4>PhoneBook Pro</h4>
-          <p style={{ marginTop:8 }}>Full-featured MERN contact directory — JWT auth, Google Maps, birthday notifications, reminders, analytics, CSV import, PDF export, and PIN-protected private contacts.</p>
+          <h4>Callista</h4>
+          <p style={{ marginTop:8 }}>Full-featured contact directory — JWT auth, Google Maps, birthday notifications, reminders, analytics, CSV import, PDF export, and PIN-protected private contacts.</p>
         </div>
       </div>
     </div>

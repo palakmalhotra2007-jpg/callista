@@ -110,10 +110,10 @@ router.get('/export/pdf', protect, async (req, res) => {
 
     const doc = new PDFDocument({ margin: 50, size: 'A4' });
     res.setHeader('Content-Type', 'application/pdf');
-    res.setHeader('Content-Disposition', 'attachment; filename=phonebook.pdf');
+    res.setHeader('Content-Disposition', 'attachment; filename=callista.pdf');
     doc.pipe(res);
 
-    doc.fontSize(24).font('Helvetica-Bold').fillColor('#1a1f2e').text('PhoneBook Pro', { align: 'center' });
+    doc.fontSize(24).font('Helvetica-Bold').fillColor('#1a1f2e').text('Callista', { align: 'center' });
     doc.fontSize(10).font('Helvetica').fillColor('#888')
        .text('Contact Directory — ' + new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' }), { align: 'center' });
     doc.moveDown(0.5).moveTo(50, doc.y).lineTo(545, doc.y).stroke('#ddd').moveDown(1);
