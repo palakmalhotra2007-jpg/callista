@@ -1,99 +1,120 @@
-# 📱 PhoneBook Pro — Vite Edition
+# 📱 Callista PhoneBook Pro — Unified Architecture & Supabase Edition
 
-This version uses **Vite** instead of Create React App.
-- ✅ Works with Node.js 16, 18, 20, 21, 22
-- ✅ No AJV/ajv errors
-- ✅ Starts in under 1 second
-- ✅ Hot reload is instant
+A modern, full-stack Contact Management Application built with React, Vite, Express, and **Supabase (PostgreSQL)**.
 
 ---
 
-## ⚠️ FIRST: Set up MongoDB (if not done yet)
+## ⚡ Quick Start (Single Command)
 
-Your backend needs a database. Use free MongoDB Atlas (no install):
+You can run both the frontend and backend simultaneously with **one single command**:
 
-1. Go to: **https://www.mongodb.com/atlas/database**
-2. Sign up free → Create project → **Build a Database → Free M0**
-3. Set username + password (e.g. user: `pankaj`, pass: `phonebook123`)
-4. **Network Access** → Add IP Address → **"Allow Access from Anywhere"** (0.0.0.0/0)
-5. **Database** → Connect → Drivers → Copy the connection string
-6. Open `backend/.env` in Notepad and replace the MONGODB_URI line:
-   ```
-   MONGODB_URI=mongodb+srv://pankaj:phonebook123@cluster0.xxxxx.mongodb.net/phonebook
-   ```
-
----
-
-## 🚀 How to Run
-
-### Terminal 1 — Backend
-```powershell
-cd backend
+```bash
+# 1. Install dependencies
 npm install
-npm start
-```
-✅ You should see: `✅ MongoDB connected` and `🚀 Server: http://localhost:5000`
 
-### Terminal 2 — Frontend (Vite)
-```powershell
-cd frontend
-npm install
+# 2. Run both Backend API and Frontend Dev Server concurrently
 npm run dev
 ```
-✅ Open browser at **http://localhost:3000**
+
+- 🌐 **Frontend**: [http://localhost:3000](http://localhost:3000)
+- 🚀 **Backend API**: [http://localhost:5000](http://localhost:5000)
 
 ---
 
-## 📁 Structure
+## 🗄️ Supabase Setup (1-Minute Guide)
+
+1. Go to [https://supabase.com](https://supabase.com) and create a free project.
+2. Open the **SQL Editor** in your Supabase Dashboard:
+   - Copy the contents of [`supabase/schema.sql`](./supabase/schema.sql) and paste it into the editor.
+   - Click **Run** to create the `users` and `contacts` tables, indexes, and triggers.
+3. Open your Supabase **Project Settings** → **API**:
+   - Copy `Project URL` and `anon` / `service_role` key.
+4. Add them to your `.env` file in the project root:
+   ```env
+   PORT=5000
+   JWT_SECRET=your_jwt_secret_key_here
+   SUPABASE_URL=https://your-project-ref.supabase.co
+   SUPABASE_KEY=your-supabase-anon-or-service-role-key
+   ```
+
+---
+
+## 🔄 Migrate Existing Data from MongoDB to Supabase
+
+If you have existing contacts in MongoDB that you want to transfer into Supabase:
+
+1. Add your `MONGO_URI` to `.env`:
+   ```env
+   MONGO_URI=mongodb+srv://...
+   ```
+2. Run the automated migration script:
+   ```bash
+   npm run migrate:supabase
+   ```
+   This will automatically copy all users, passwords, PINs, contacts, reminders, follow-ups, and tags into Supabase.
+
+---
+
+## 📁 Unified Project Structure
 
 ```
-phonebook-pro/
-├── backend/
-│   ├── server.js
-│   ├── .env              ← PUT YOUR MONGODB_URI HERE
-│   ├── package.json
-│   └── src/
-│       ├── config/db.js
-│       ├── middleware/authMiddleware.js
-│       ├── models/User.js + Contact.js
-│       └── routes/ (auth, contacts, reminders, birthdays, analytics, tags)
+Callista/
+├── index.html            ← Vite frontend HTML root
+├── vite.config.js        ← Vite config with API proxy
+├── package.json          ← Unified scripts & dependencies
+├── .env                  ← Environment variables (Supabase, JWT, Port)
+├── .env.example          ← Sample environment template
 │
-├── frontend/
-│   ├── index.html        ← Vite entry point
-│   ├── vite.config.js    ← Proxies /api → localhost:5000
-│   ├── package.json      ← Modern deps, no react-scripts
-│   └── src/
-│       ├── main.jsx      ← React entry
-│       ├── App.jsx
-│       ├── index.css     ← Edit CSS variables here to change colours
-│       ├── services/api.js
-│       ├── context/AuthContext.jsx
-│       ├── components/   ← All .jsx components
-│       └── pages/        ← Login, Analytics, Reminders, Settings
+├── src/                  ← Frontend React Source
+│   ├── main.jsx          ← React entry point
+│   ├── App.jsx           ← Main application
+│   ├── index.css         ← Global CSS tokens & themes
+│   ├── components/       ← UI components
+│   ├── pages/            ← Login, Analytics, Reminders, Settings
+│   ├── context/          ← AuthContext
+│   └── services/         ← API client (Axios)
 │
-└── package.json
+├── server/               ← Backend Express Server
+│   ├── server.js         ← API server entrypoint & static serve
+│   ├── config/
+│   │   └── supabase.js   ← Supabase client & shape mappers
+│   ├── middleware/
+│   │   └── authMiddleware.js ← JWT authentication
+│   └── routes/
+│       ├── authRoutes.js     ← Auth & PIN endpoints
+│       ├── contactRoutes.js  ← Contacts CRUD, CSV import, PDF export
+│       └── otherRoutes.js    ← Reminders, birthdays, analytics, tags
+│
+├── supabase/
+│   └── schema.sql        ← PostgreSQL table definitions & indexes
+│
+└── scripts/
+    └── migrate-mongo-to-supabase.js ← MongoDB to Supabase migration tool
 ```
 
 ---
 
-## ✏️ Customise Colours
+## 🛠️ Available Scripts
 
-Open `frontend/src/index.css` and edit at the top:
-```css
---accent:     #1c4e8a;   /* change blue to any colour */
---bg-sidebar: #18243a;   /* dark sidebar colour */
---gold:       #d97706;   /* gold highlights */
-```
+| Command | Description |
+|---|---|
+| `npm run dev` | Runs both backend (Express on 5000) and frontend (Vite on 3000) concurrently |
+| `npm run server:dev` | Runs backend only with nodemon auto-restart |
+| `npm run client:dev` | Runs frontend only with Vite |
+| `npm run build` | Builds optimized frontend bundle into `dist/` |
+| `npm start` | Runs Express production server (serves API & `dist/`) |
+| `npm run migrate:supabase` | Migrates MongoDB users & contacts to Supabase |
 
 ---
 
-## ✅ Features
-- 🔐 Login / Register with JWT
-- 🗺️ Google Maps embed in contact detail
-- 🎂 Birthday notifications (in-app + browser push)
-- ⏰ Reminders with overdue warnings
-- 💬 Follow-up notes
-- 📊 Analytics dashboard
-- 📥 CSV Import / 📄 PDF Export
-- 🔒 PIN-protected private contacts
-- ⭐ Favourites, 🏷️ Tags, 🔍 Smart search
+## ✨ Features
+- ⚡ **Single-command runtime**: Concurrently run client + server with `npm run dev`
+- 🗄️ **Supabase Database**: Fast PostgreSQL storage with JSONB support
+- 🔐 **Authentication**: Secure bcrypt password hashing + JWT tokens + 4-digit PIN lock
+- 🗺️ **Interactive Details**: Google Maps integration, quick actions, call/email links
+- 🎂 **Birthday Tracker**: Upcoming 30-day birthday widget and reminders
+- ⏰ **Smart Reminders**: Overdue alerts, call reminders, one-click completion
+- 💬 **Follow-Up History**: Timestamped conversation logs
+- 📊 **Analytics Dashboard**: Distribution charts and top contact metrics
+- 📥 **CSV Import & 📄 PDF Export**: Fast batch import and printable directory export
+- 🏷️ **Smart Organization**: Categories, custom tags, and full-text search

@@ -1,8 +1,0 @@
-{
-  "rewrites": [
-    {
-      "source": "/api/(.*)",
-      "destination": "https://callista-backend.onrender.com/api/$1"
-    }
-  ]
-}
