@@ -12,3 +12,13 @@
 .ap-chart h3 { font-size: 14px; font-weight: 700; color: var(--ink); margin-bottom: 16px; display: flex; align-items: center; gap: 7px; }
 .ap-no-data { font-size: 13px; color: var(--ink-ghost); text-align: center; padding: 40px 0; }
 @media (max-width: 768px) { .ap-charts { grid-template-columns: 1fr; } }
+
+/* ── Mobile (extend existing 768px rule) ── */
+@media (max-width: 768px) {
+  .ap { padding: 16px; }
+  .ap-title { font-size: 1.2rem; margin-bottom: 16px; }
+  .ap-stats { grid-template-columns: repeat(2, 1fr); gap: 8px; }
+  .ap-stat  { padding: 14px 10px; }
+  .ap-stat-val { font-size: 1.4rem; }
+  .ap-chart { padding: 14px; }
+}

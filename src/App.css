@@ -17,7 +17,7 @@
 .topbar-refresh { width: 32px; height: 32px; border: 1px solid var(--border); border-radius: 10px; background: transparent; color: var(--ink-soft); cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.15s; }
 .topbar-refresh:hover { border-color: var(--brand); color: var(--brand); background: var(--brand-bg); }
 
-.private-btn { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 1px solid var(--border); border-radius: 10px; background: transparent; color: var(--ink-soft); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; }
+.private-btn { display: flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px; border: 1px solid var(--border); border-radius: 10px; background: transparent; color: var(--ink-soft); font-size: 12px; font-weight: 600; cursor: pointer; transition: all 0.15s; white-space: nowrap; }
 .private-btn:hover  { border-color: var(--teal); color: var(--teal); background: var(--teal-bg); }
 .private-btn.active { background: var(--teal-bg); border-color: var(--teal); color: var(--teal); }
 
@@ -26,7 +26,7 @@
 .view-btn.active { background: var(--ink); color: white; }
 .view-btn:hover:not(.active) { background: var(--surface-2); color: var(--ink); }
 
-.add-btn { display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 18px; background: var(--brand); color: white; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s, transform 0.1s; box-shadow: var(--sh-brand); }
+.add-btn { display: flex; align-items: center; gap: 6px; height: 36px; padding: 0 18px; background: var(--brand); color: white; border: none; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s, transform 0.1s; box-shadow: var(--sh-brand); white-space: nowrap; }
 .add-btn:hover  { background: var(--brand-dark); }
 .add-btn:active { transform: scale(0.98); }
 
@@ -45,4 +45,44 @@
 .app-loading { display: flex; align-items: center; justify-content: center; height: 100vh; background: var(--bg); }
 .app-spin { width: 36px; height: 36px; border: 3px solid var(--border); border-top-color: var(--brand); border-radius: 50%; animation: spin 0.8s linear infinite; }
 
-@media (max-width: 1100px) { .main { margin-left: 0; } .main.panel-open { margin-right: 0; } .content { padding: 16px; } .topbar { padding: 0 16px; } }
+/* ── Tablet ── */
+@media (max-width: 1100px) {
+  .main { margin-left: 248px; }
+  .main.panel-open { margin-right: 0; }
+  .content { padding: 16px; }
+  .topbar { padding: 0 16px; }
+}
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .main { margin-left: 0; }
+  .main.panel-open { margin-right: 0; }
+
+  .topbar {
+    padding: 0 12px 0 58px; /* left padding makes room for the hamburger */
+    height: 54px;
+    gap: 6px;
+  }
+  .topbar-title { font-size: 0.95rem; }
+  .topbar-count { display: none; }
+
+  /* Hide label on private-btn, show icon only */
+  .private-btn span:last-child { display: none; }
+  .private-btn { padding: 0 10px; }
+
+  /* Collapse view-group on very small screens */
+  .view-group { display: none; }
+
+  .add-btn { padding: 0 12px; font-size: 12px; height: 34px; }
+  .add-btn span { display: none; } /* hide "New Contact" text, keep + icon */
+
+  .content { padding: 12px; }
+
+  .contacts-grid { grid-template-columns: 1fr; gap: 8px; }
+  .skel-grid     { grid-template-columns: 1fr; gap: 8px; }
+}
+
+@media (max-width: 400px) {
+  .topbar-refresh { display: none; }
+}
+

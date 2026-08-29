@@ -98,3 +98,44 @@
 }
 .sb-foot:hover { background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.70); }
 .sb-foot.danger:hover { color: #f87171; background: rgba(248,113,113,0.09); }
+
+/* ── Hamburger + close (hidden on desktop) ── */
+.sb-hamburger {
+  display: none;
+  position: fixed; top: 12px; left: 12px; z-index: 30;
+  width: 38px; height: 38px;
+  background: var(--sb); color: rgba(255,255,255,0.85);
+  border: none; border-radius: 10px; cursor: pointer;
+  align-items: center; justify-content: center;
+  box-shadow: var(--sh);
+}
+.sb-close {
+  display: none;
+  background: none; border: none;
+  color: rgba(255,255,255,0.45); cursor: pointer;
+  padding: 4px; flex-shrink: 0;
+}
+.sb-close:hover { color: rgba(255,255,255,0.85); }
+
+/* Backdrop */
+.sb-backdrop {
+  display: none;
+  position: fixed; inset: 0; z-index: 19;
+  background: rgba(0,0,0,0.5);
+  backdrop-filter: blur(2px);
+}
+
+@media (max-width: 768px) {
+  /* Sidebar slides in from left */
+  .sidebar {
+    transform: translateX(-100%);
+    transition: transform 0.28s cubic-bezier(0.4,0,0.2,1);
+    z-index: 20;
+    width: 280px;
+  }
+  .sidebar.sb-open { transform: translateX(0); }
+
+  .sb-hamburger { display: flex; }
+  .sb-close     { display: flex; }
+  .sb-backdrop  { display: block; }
+}

@@ -14,3 +14,12 @@
 .sp-btn { display: flex; align-items: center; justify-content: center; gap: 7px; height: 42px; padding: 0 20px; background: var(--brand); color: white; border: none; border-radius: var(--r-md); font-size: 13px; font-weight: 700; cursor: pointer; transition: background 0.15s; }
 .sp-btn:hover:not(:disabled) { background: var(--brand-dark); }
 .sp-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .sp { padding: 16px; max-width: 100%; }
+  .sp-title { font-size: 1.2rem; margin-bottom: 16px; }
+  .sp-card  { padding: 16px; }
+  .sp-input { height: 48px; font-size: 18px; }
+  .sp-btn   { height: 48px; font-size: 14px; }
+}

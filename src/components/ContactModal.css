@@ -142,3 +142,37 @@
 }
 .modal-map-preview-btn:hover { background: #dcfce7; border-color: #4ade80; }
 
+
+/* ── Mobile: full-screen modal ── */
+@media (max-width: 768px) {
+  .modal-overlay {
+    padding: 0;
+    align-items: flex-end;
+  }
+
+  .modal-box {
+    max-width: 100%;
+    width: 100%;
+    max-height: 95vh;
+    border-radius: 20px 20px 0 0;
+    border-bottom: none;
+  }
+
+  .modal-header  { padding: 14px 16px 10px; }
+  .modal-tabs    { padding: 0 14px; }
+  .modal-tab     { padding: 9px 10px; font-size: 12px; }
+  .modal-body    { padding: 14px 16px; }
+  .modal-footer  { padding: 12px 16px; }
+
+  /* Stack 2-column rows on mobile */
+  .form-row-2 { grid-template-columns: 1fr; }
+
+  /* Bigger inputs for touch */
+  .form-input   { font-size: 15px; padding: 10px 12px; }
+  .form-textarea { font-size: 15px; }
+  .phone-label-select { font-size: 13px; width: 85px; }
+
+  .cat-option { padding: 7px 14px; font-size: 13px; }
+
+  .save-btn, .cancel-btn { height: 44px; font-size: 14px; }
+}

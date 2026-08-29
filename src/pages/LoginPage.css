@@ -230,3 +230,16 @@
 .lp-switch button:hover {
   text-decoration: underline;
 }
+
+/* ── Mobile ── */
+@media (max-width: 480px) {
+  .lp-center { padding: 16px; align-items: flex-start; padding-top: 48px; }
+  .lp-card {
+    padding: 28px 20px;
+    border-radius: 16px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+  }
+  .lp-title { font-size: 1.15rem; }
+  .lp-iw input { font-size: 15px; height: 48px; }
+  .lp-btn { height: 50px; font-size: 15px; }
+}

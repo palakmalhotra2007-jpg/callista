@@ -1,4 +1,4 @@
-# 📱 Callista PhoneBook Pro — Unified Architecture & Firebase Edition
+# 📱 Callista
 
 A modern, full-stack Contact Management Application built with React, Vite, Express, and **Firebase (Cloud Firestore)**.
 

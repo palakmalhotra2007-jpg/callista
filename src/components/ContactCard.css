@@ -72,3 +72,11 @@
   pointer-events: none;
   white-space: nowrap;
 }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .card { padding: 14px; }
+  .card-name { font-size: 14px; }
+  /* Bigger tap targets for action buttons */
+  .card-btn { width: 34px; height: 34px; }
+}

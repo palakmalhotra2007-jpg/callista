@@ -24,3 +24,12 @@
 .rp-date { font-size: 10px; color: var(--ink-ghost); }
 .rp-done-btn { display: flex; align-items: center; gap: 5px; padding: 5px 11px; background: var(--green-bg); border: 1px solid #6ee7b7; border-radius: var(--r-sm); color: var(--green); font-size: 11px; font-weight: 700; cursor: pointer; transition: all 0.15s; }
 .rp-done-btn:hover { background: var(--green); color: white; border-color: var(--green); }
+
+/* ── Mobile ── */
+@media (max-width: 768px) {
+  .rp { padding: 16px; }
+  .rp-header h2 { font-size: 1.2rem; }
+  .rp-row { padding: 12px; gap: 10px; }
+  .rp-right { flex-direction: row; align-items: center; flex-wrap: wrap; justify-content: flex-end; }
+  .rp-done-btn { padding: 7px 12px; font-size: 12px; }
+}
